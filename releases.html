@@ -704,8 +704,11 @@
         const assetBtns = assets.map((a, ai) => {
           const isPrimary = ai === 0;
           const dlCount = a.download_count > 0 ? `<span style="opacity:.5;font-size:.65rem;margin-left:.35rem"><i class="ti ti-download" style="font-size:.6rem"></i>${formatStars(a.download_count)}</span>` : '';
-          const copyId = `copy-${id}-${ai}`;
-          return `<div style="display:inline-flex;align-items:center;gap:0"><a href="${a.browser_download_url}" class="lp-asset-btn ${isPrimary ? 'primary' : ''}" target="_blank" rel="noopener">${getOSIcon(a.name)} ${a.name} ${a.size ? '<span style="opacity:.6;font-size:.65rem">' + formatBytes(a.size) + '</span>' : ''} ${dlCount}</a><button class="lp-copy-btn" id="${copyId}" onclick="copyUrl('${a.browser_download_url}','${copyId}')" title="Copy download URL"><i class="ti ti-clipboard"></i></button></div>`;
+          const copyId = `copy-${id}-${i}-${ai}`;
+          const hashId = `hash-${id}-${i}-${ai}`;
+          const digest = a.digest ? a.digest.replace(/^sha256:/, '') : '';
+          const hashBtn = digest ? `<button class="lp-copy-btn" id="${hashId}" onclick="copySha('${digest}','${hashId}')" title="Copy SHA-256 hash"><i class="ti ti-fingerprint"></i></button>` : '';
+          return `<div style="display:inline-flex;align-items:center;gap:0"><a href="${a.browser_download_url}" class="lp-asset-btn ${isPrimary ? 'primary' : ''}" target="_blank" rel="noopener">${getOSIcon(a.name)} ${a.name} ${a.size ? '<span style="opacity:.6;font-size:.65rem">' + formatBytes(a.size) + '</span>' : ''} ${dlCount}</a><button class="lp-copy-btn" id="${copyId}" onclick="copyUrl('${a.browser_download_url}','${copyId}')" title="Copy download URL"><i class="ti ti-clipboard"></i></button>${hashBtn}</div>`;
         }).join('');
         const body = truncateBody(r.body);
         const releaseDlCount = assets.reduce((sum, a) => sum + (a.download_count || 0), 0);
@@ -851,6 +854,29 @@
           btn.classList.add('copied');
           btn.innerHTML = '<i class="ti ti-check"></i>';
           setTimeout(function() { btn.classList.remove('copied'); btn.innerHTML = '<i class="ti ti-link"></i>'; }, 2000);
+        }
+      });
+    }
+
+    // Copy SHA to clipboard
+    function copySha(sha, btnId) {
+      navigator.clipboard.writeText(sha).then(function() {
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+        const icon = btn.querySelector('i');
+        btn.classList.add('copied');
+        icon.className = 'ti ti-check';
+        setTimeout(function() { btn.classList.remove('copied'); icon.className = 'ti ti-fingerprint'; }, 2000);
+      }).catch(function() {
+        const ta = document.createElement('textarea');
+        ta.value = sha; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+        document.body.removeChild(ta);
+        const btn = document.getElementById(btnId);
+        if (btn) {
+          const icon = btn.querySelector('i');
+          btn.classList.add('copied'); icon.className = 'ti ti-check';
+          setTimeout(function() { btn.classList.remove('copied'); icon.className = 'ti ti-fingerprint'; }, 2000);
         }
       });
     }
