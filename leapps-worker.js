@@ -9,6 +9,7 @@ const ALLOWED_REPOS = [
   'abrignoni/RLEAPP',
   'abrignoni/VLEAPP',
   'leapps-org/LAVA-releases',
+  'leapps-org/leapps-language-resources',
 ];
  
 export default {

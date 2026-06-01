@@ -241,10 +241,9 @@
     }
 
     /* ── Section shared ── */
+    #lp-root { margin: 0 8px; }
     .lp-section {
       padding: 4rem 2rem;
-      max-width: 1100px;
-      margin: 0 auto;
     }
     .lp-section-label {
       font-family: var(--font-mono);
@@ -557,7 +556,7 @@
       color: #555555;
       text-transform: uppercase;
     }
-
+    
     /* ── Footer ── */
     .lp-footer {
       border-top: 1px solid var(--border);
@@ -889,9 +888,24 @@
     @media (max-width: 768px) {
       .lp-back-top { bottom: 1rem; right: 1rem; width: 44px; height: 44px; }
     }
+    /* THEME TOGGLE */
+    [data-theme="light"] { --off-black: #F5F2EC; --surface: #EAE6DE; --border: #C8C3B8; --text: #1C1A14; --muted: #6B6458; }
+    [data-theme="light"] body, [data-theme="light"] #lp-root, [data-theme="light"] section,
+    [data-theme="light"] main, [data-theme="light"] footer, [data-theme="light"] #canvas,
+    [data-theme="light"] #page, [data-theme="light"] #content, [data-theme="light"] .page-section,
+    [data-theme="light"] .page-section-wrapper,
+    [data-theme="light"] .sqs-layout { background-color: #F5F2EC !important; }
+    [data-theme="light"] body { color: #1C1A14 !important; }
+    [data-theme="light"] .lp-nav { background: rgba(245,242,236,0.96); }
+    [data-theme="light"] .lp-nav-dropdown-menu { background: rgba(245,242,236,.98); }
+    [data-theme="light"] .lp-mobile-menu { background: rgba(245,242,236,.98); }
+    .lp-theme-toggle { background: none; border: 1px solid var(--border); color: var(--muted); width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: color .2s, border-color .2s; font-size: 1rem; flex-shrink: 0; }
+    .lp-theme-toggle:hover { color: var(--gold); border-color: var(--gold); }
   </style>
+  <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('lp-theme')||'dark');</script>
 </head>
 <body>
+<div id="lp-root">
 
   <!-- NAV -->
   <nav class="lp-nav">
@@ -908,6 +922,7 @@
           <a href="#faq"><i class="ti ti-help-circle" aria-hidden="true"></i>FAQ</a>
           <a href="#mentions"><i class="ti ti-award" aria-hidden="true"></i>Featured</a>
           <a href="#contributors"><i class="ti ti-users" aria-hidden="true"></i>Contributors</a>
+          <a href="#translators"><i class="ti ti-language" aria-hidden="true"></i>Translators</a>
           <a href="https://leapps.org/scoreboard"><i class="ti ti-trophy" aria-hidden="true"></i>Scoreboard</a>
           <a href="#mailing"><i class="ti ti-mail" aria-hidden="true"></i>Mailing List</a>
           <a href="https://leapps.org/resources"><i class="ti ti-books" aria-hidden="true"></i>Resources</a>
@@ -916,6 +931,7 @@
       <li><a href="https://github.com/abrignoni" target="_blank" rel="noopener">GitHub</a></li>
     </ul>
     <a href="#download" class="lp-nav-cta">Get Tools</a>
+    <button class="lp-theme-toggle" id="lp-theme-toggle" aria-label="Toggle theme"><i class="ti ti-sun" id="lp-theme-icon" aria-hidden="true"></i></button>
     <button class="lp-hamburger" id="lp-hamburger" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
@@ -929,6 +945,7 @@
     <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
     <a href="#mentions" onclick="closeMobileMenu()">Featured</a>
     <a href="#contributors" onclick="closeMobileMenu()">Contributors</a>
+    <a href="#translators" onclick="closeMobileMenu()">Translators</a>
     <a href="https://leapps.org/scoreboard" onclick="closeMobileMenu()">Scoreboard</a>
     <a href="#mailing" onclick="closeMobileMenu()">Mailing List</a>
     <a href="https://leapps.org/resources" onclick="closeMobileMenu()">Resources</a>
@@ -1336,6 +1353,24 @@
     </div>
   </section>
 
+  <section class="lp-contrib-section" id="translators">
+    <div class="lp-contrib-inner">
+      <span class="lp-section-label">The People</span>
+      <h2 class="lp-section-title">Language Contributors</h2>
+      <p style="color:var(--muted);font-size:.95rem;margin-bottom:2rem;max-width:560px;">The contributors who make LEAPPs accessible in multiple languages through UI translations. All data pulled live from GitHub.</p>
+      <div id="lp-trans-top" class="lp-contrib-list">
+        <div class="lp-contrib-loading"><span style="color:var(--gold)">Fetching contributors…</span></div>
+      </div>
+      <div id="lp-trans-toggle-wrap" style="display:none">
+        <div class="lp-contrib-toggle" id="lp-trans-toggle" onclick="toggleTransExtra()">
+          <span id="lp-trans-toggle-label"><i class="ti ti-language" aria-hidden="true"></i> Show more contributors</span>
+          <i class="ti ti-chevron-down lp-chevron" aria-hidden="true"></i>
+        </div>
+        <div class="lp-contrib-extra" id="lp-trans-extra"></div>
+      </div>
+    </div>
+  </section>
+
   <section class="lp-mailing" id="mailing">
     <div class="lp-mailing-inner">
       <span class="lp-section-label">Stay in the Loop</span>
@@ -1460,6 +1495,71 @@
           '<div class="lp-contrib-loading">Could not load contributors. <a href="https://github.com/abrignoni" target="_blank" style="color:var(--gold)">View on GitHub →</a></div>';
       }
     })();
+
+    // Language Contributors section
+    (async function() {
+      function getInitials(login) { return login.slice(0, 2).toUpperCase(); }
+
+      function buildRow(c) {
+        const avatar = c.avatar
+          ? `<img src="${c.avatar}" alt="${c.login}" loading="lazy" />`
+          : getInitials(c.login);
+        return `<a href="https://github.com/${c.login}" class="lp-contrib-row" target="_blank" rel="noopener">
+          <div class="lp-contrib-avatar">${avatar}</div>
+          <div class="lp-contrib-info">
+            <div class="lp-contrib-name">${c.login}</div>
+            <div class="lp-contrib-role">Language Contributor</div>
+          </div>
+          <div class="lp-contrib-right">
+            <div class="lp-contrib-commits">${c.contributions.toLocaleString()} commits</div>
+            <div class="lp-contrib-tools"><span class="lp-contrib-tag">leapps-language-resources</span></div>
+          </div>
+        </a>`;
+      }
+
+      try {
+        const pages = await Promise.all([1,2,3].map(p =>
+          fetch(`https://leapps-api.4n6-198.workers.dev/repos/leapps-org/leapps-language-resources/contributors?per_page=100&page=${p}&anon=false`)
+            .then(res => res.ok ? res.json().catch(() => []) : [])
+            .catch(() => [])
+        ));
+        const flat = pages.flat().filter(c => c && c.login && c.type !== 'Bot' && !c.login.toLowerCase().includes('bot') && c.login !== 'actions-user');
+        const sorted = flat.sort((a, b) => b.contributions - a.contributions).map(c => ({
+          login: c.login, avatar: c.avatar_url, contributions: c.contributions
+        }));
+
+        const top5 = sorted.slice(0, 5);
+        const rest = sorted.slice(5);
+
+        document.getElementById('lp-trans-top').innerHTML = top5.map(buildRow).join('');
+
+        if (rest.length > 0) {
+          const toggleWrap = document.getElementById('lp-trans-toggle-wrap');
+          const extra = document.getElementById('lp-trans-extra');
+          const label = document.getElementById('lp-trans-toggle-label');
+          label.innerHTML = `<i class="ti ti-language" aria-hidden="true"></i> Show ${rest.length} more contributor${rest.length > 1 ? 's' : ''}`;
+          extra.innerHTML = rest.map(buildRow).join('');
+          toggleWrap.style.display = 'block';
+        }
+      } catch(e) {
+        document.getElementById('lp-trans-top').innerHTML =
+          '<div class="lp-contrib-loading">Could not load contributors. <a href="https://github.com/abrignoni/leapps-website" target="_blank" style="color:var(--gold)">View on GitHub →</a></div>';
+      }
+    })();
+
+    function toggleTransExtra() {
+      const toggle = document.getElementById('lp-trans-toggle');
+      const extra = document.getElementById('lp-trans-extra');
+      const label = document.getElementById('lp-trans-toggle-label');
+      const isOpen = toggle.classList.toggle('open');
+      extra.classList.toggle('open');
+      const count = extra.querySelectorAll('.lp-contrib-row').length;
+      if (isOpen) {
+        label.innerHTML = `<i class="ti ti-language" aria-hidden="true"></i> Hide ${count} contributor${count > 1 ? 's' : ''}`;
+      } else {
+        label.innerHTML = `<i class="ti ti-language" aria-hidden="true"></i> Show ${count} more contributor${count > 1 ? 's' : ''}`;
+      }
+    }
 
     function toggleContribExtra() {
       const toggle = document.getElementById('lp-contrib-toggle');
@@ -1598,6 +1698,20 @@
       });
     }, 2000);
   </script>
+  <script>
+    (function(){
+      var btn=document.getElementById('lp-theme-toggle');
+      var icon=document.getElementById('lp-theme-icon');
+      var t=localStorage.getItem('lp-theme')||'dark';
+      function apply(theme){
+        document.documentElement.setAttribute('data-theme',theme);
+        icon.className=theme==='light'?'ti ti-moon':'ti ti-sun';
+      }
+      apply(t);
+      btn.addEventListener('click',function(){t=t==='dark'?'light':'dark';localStorage.setItem('lp-theme',t);apply(t);});
+    })();
+  </script>
 
+</div>
 </body>
 </html>
