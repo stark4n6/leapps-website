@@ -100,6 +100,10 @@
     /* LOADING */
     .lp-cl-loading { padding: 2rem; text-align: center; font-family: var(--font-mono); font-size: .8rem; color: var(--muted); border: 1px solid var(--border); background: var(--surface); }
     .lp-cl-loading span { color: var(--gold); }
+    @keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
+    .lp-skel { display: block; border-radius: 2px; background: linear-gradient(90deg, var(--border) 25%, var(--surface) 50%, var(--border) 75%); background-size: 800px 100%; animation: shimmer 1.5s infinite; }
+    .lp-skel-entry { position: relative; margin-bottom: 1.25rem; padding-left: 1rem; }
+    .lp-skel-entry::before { content: ''; position: absolute; left: -1.57rem; top: .45rem; width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
 
     /* TIMELINE */
     .lp-timeline { position: relative; padding-left: 1.5rem; }
@@ -247,7 +251,13 @@
     </div>
 
     <div id="changelog-container">
-      <div class="lp-cl-loading"><span>Fetching releases…</span></div>
+      <div class="lp-timeline">
+        <div class="lp-skel-entry"><span class="lp-skel" style="height:.65rem;width:80px;margin-bottom:.6rem"></span><span class="lp-skel" style="height:1.1rem;width:120px;margin-bottom:.5rem"></span><span class="lp-skel" style="height:.8rem;width:100%"></span></div>
+        <div class="lp-skel-entry"><span class="lp-skel" style="height:.65rem;width:80px;margin-bottom:.6rem"></span><span class="lp-skel" style="height:1.1rem;width:100px;margin-bottom:.5rem"></span><span class="lp-skel" style="height:.8rem;width:90%"></span></div>
+        <div class="lp-skel-entry"><span class="lp-skel" style="height:.65rem;width:80px;margin-bottom:.6rem"></span><span class="lp-skel" style="height:1.1rem;width:110px;margin-bottom:.5rem"></span><span class="lp-skel" style="height:.8rem;width:95%"></span></div>
+        <div class="lp-skel-entry"><span class="lp-skel" style="height:.65rem;width:80px;margin-bottom:.6rem"></span><span class="lp-skel" style="height:1.1rem;width:90px;margin-bottom:.5rem"></span><span class="lp-skel" style="height:.8rem;width:85%"></span></div>
+        <div class="lp-skel-entry"><span class="lp-skel" style="height:.65rem;width:80px;margin-bottom:.6rem"></span><span class="lp-skel" style="height:1.1rem;width:115px;margin-bottom:.5rem"></span><span class="lp-skel" style="height:.8rem;width:92%"></span></div>
+      </div>
     </div>
 
   </main>

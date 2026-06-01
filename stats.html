@@ -89,8 +89,11 @@
     .lp-metric-icon { font-size: 1.1rem; color: var(--gold); margin-bottom: .75rem; display: block; }
     .lp-metric-label { font-family: var(--font-mono); font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
     .lp-metric-value { font-family: var(--font-head); font-size: 2.2rem; font-weight: 900; color: var(--text); line-height: 1; }
-    .lp-metric-value.loading { font-size: 1.5rem; color: #444; }
+    .lp-metric-value.loading { font-size: 1.5rem; color: transparent !important; background: linear-gradient(90deg, var(--border) 25%, var(--surface) 50%, var(--border) 75%); background-size: 800px 100%; animation: shimmer 1.5s infinite; border-radius: 2px; min-width: 80px; display: inline-block; }
     .lp-metric-sub { font-size: .75rem; color: #555; margin-top: .4rem; }
+    @keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
+    .lp-skel { display: block; border-radius: 2px; background: linear-gradient(90deg, var(--border) 25%, var(--surface) 50%, var(--border) 75%); background-size: 800px 100%; animation: shimmer 1.5s infinite; }
+    .lp-loading-row td .lp-skel { height: 14px; }
 
     /* SECTION */
     .lp-section { margin-bottom: 3rem; }
@@ -287,7 +290,11 @@
           </tr>
         </thead>
         <tbody id="stats-tbody">
-          <tr class="lp-loading-row"><td colspan="6">Fetching data from GitHub…</td></tr>
+          <tr><td><span class="lp-skel" style="height:1.1rem;width:60px"></span></td><td><span class="lp-skel" style="height:1rem;width:70px"></span></td><td><span class="lp-skel" style="height:1rem;width:50px"></span></td><td><span class="lp-skel" style="height:1rem;width:40px"></span></td><td><span class="lp-skel" style="height:1rem;width:40px"></span></td><td><span class="lp-skel" style="height:1rem;width:50px"></span></td></tr>
+          <tr><td><span class="lp-skel" style="height:1.1rem;width:60px"></span></td><td><span class="lp-skel" style="height:1rem;width:70px"></span></td><td><span class="lp-skel" style="height:1rem;width:50px"></span></td><td><span class="lp-skel" style="height:1rem;width:40px"></span></td><td><span class="lp-skel" style="height:1rem;width:40px"></span></td><td><span class="lp-skel" style="height:1rem;width:50px"></span></td></tr>
+          <tr><td><span class="lp-skel" style="height:1.1rem;width:60px"></span></td><td><span class="lp-skel" style="height:1rem;width:70px"></span></td><td><span class="lp-skel" style="height:1rem;width:50px"></span></td><td><span class="lp-skel" style="height:1rem;width:40px"></span></td><td><span class="lp-skel" style="height:1rem;width:40px"></span></td><td><span class="lp-skel" style="height:1rem;width:50px"></span></td></tr>
+          <tr><td><span class="lp-skel" style="height:1.1rem;width:60px"></span></td><td><span class="lp-skel" style="height:1rem;width:70px"></span></td><td><span class="lp-skel" style="height:1rem;width:50px"></span></td><td><span class="lp-skel" style="height:1rem;width:40px"></span></td><td><span class="lp-skel" style="height:1rem;width:40px"></span></td><td><span class="lp-skel" style="height:1rem;width:50px"></span></td></tr>
+          <tr><td><span class="lp-skel" style="height:1.1rem;width:60px"></span></td><td><span class="lp-skel" style="height:1rem;width:70px"></span></td><td><span class="lp-skel" style="height:1rem;width:50px"></span></td><td><span class="lp-skel" style="height:1rem;width:40px"></span></td><td><span class="lp-skel" style="height:1rem;width:40px"></span></td><td><span class="lp-skel" style="height:1rem;width:50px"></span></td></tr>
         </tbody>
       </table>
     </div>
@@ -324,26 +331,54 @@
 
     let dlChart, starChart;
 
-    function initCharts(labels, dlData, starData) {
-      const shared = {
+    function getChartColors() {
+      const light = document.documentElement.getAttribute('data-theme') === 'light';
+      return {
+        tick: light ? '#6B6458' : '#888888',
+        grid: light ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.05)',
+      };
+    }
+
+    function buildChartOptions() {
+      const c = getChartColors();
+      return {
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: false } },
         scales: {
-          x: { grid: { display: false }, ticks: { color: '#888', font: { size: 11 } } },
-          y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888', font: { size: 11 }, callback: v => fmt(v) } }
+          x: { grid: { display: false }, ticks: { color: c.tick, font: { size: 11 } } },
+          y: { grid: { color: c.grid }, ticks: { color: c.tick, font: { size: 11 }, callback: v => fmt(v) } }
         }
       };
+    }
+
+    function initCharts(labels, dlData, starData) {
       dlChart = new Chart(document.getElementById('dlChart'), {
         type: 'bar',
         data: { labels, datasets: [{ data: dlData, backgroundColor: '#378ADD', borderRadius: 3 }] },
-        options: shared
+        options: buildChartOptions()
       });
       starChart = new Chart(document.getElementById('starChart'), {
         type: 'bar',
         data: { labels, datasets: [{ data: starData, backgroundColor: '#F5C020', borderRadius: 3 }] },
-        options: shared
+        options: buildChartOptions()
       });
     }
+
+    function updateChartTheme() {
+      if (!dlChart || !starChart) return;
+      const c = getChartColors();
+      [dlChart, starChart].forEach(chart => {
+        chart.options.scales.x.ticks.color = c.tick;
+        chart.options.scales.y.ticks.color = c.tick;
+        chart.options.scales.y.grid.color = c.grid;
+        chart.update();
+      });
+    }
+
+    new MutationObserver(updateChartTheme).observe(
+      document.documentElement,
+      { attributes: true, attributeFilter: ['data-theme'] }
+    );
 
     async function fetchStats() {
       try {
