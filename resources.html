@@ -184,15 +184,48 @@
     /* REPO CARD — icon-only left side */
     .lp-res-card-icon {
       flex-shrink: 0;
-      width: 48px;
-      height: 48px;
+      width: 80px;
+      height: 80px;
       background: rgba(245,192,32,.08);
       border: 1px solid rgba(245,192,32,.2);
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .lp-res-card-icon i { font-size: 1.4rem; color: var(--gold); }
+    .lp-res-card-icon i { font-size: 2rem; color: var(--gold); }
+
+    /* IN-PAGE NAV */
+    .lp-page-nav {
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .lp-page-nav-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .lp-page-nav-inner::-webkit-scrollbar { display: none; }
+    .lp-page-nav-inner a {
+      font-family: var(--font-mono);
+      font-size: .62rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none !important;
+      padding: .75rem 1rem;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .2s;
+    }
+    .lp-page-nav-inner a:hover { color: var(--text); }
+    .lp-page-nav-inner a.active { color: var(--gold); border-bottom-color: var(--gold); }
 
     /* VIDEO META CHIP */
     .lp-res-card-meta {
@@ -392,6 +425,16 @@
     </div>
   </header>
 
+  <nav class="lp-page-nav" aria-label="Page sections">
+    <div class="lp-page-nav-inner">
+      <a href="#community">Community</a>
+      <a href="#written-guides">Written Guides</a>
+      <a href="#videos">Videos</a>
+      <a href="#repositories">Repositories</a>
+      <a href="#mentions">Featured &amp; Recognized</a>
+    </div>
+  </nav>
+
   <main class="lp-main">
 
     <!-- SUBMIT CTA -->
@@ -404,7 +447,7 @@
     </div>
 
     <!-- COMMUNITY -->
-    <div class="lp-res-section">
+    <div class="lp-res-section" id="community">
       <div class="lp-res-section-label"><i class="ti ti-users"></i> Community</div>
       <div class="lp-res-grid">
 
@@ -422,7 +465,7 @@
     </div>
 
     <!-- WRITTEN GUIDES -->
-    <div class="lp-res-section">
+    <div class="lp-res-section" id="written-guides">
       <div class="lp-res-section-label"><i class="ti ti-file-text"></i> Written Guides</div>
       <div class="lp-res-grid">
 
@@ -460,7 +503,7 @@
     </div>
 
     <!-- VIDEOS -->
-    <div class="lp-res-section">
+    <div class="lp-res-section" id="videos">
       <div class="lp-res-section-label"><i class="ti ti-brand-youtube"></i> Videos</div>
       <div class="lp-res-grid">
 
@@ -553,7 +596,7 @@
     </div>
 
     <!-- REPOSITORIES -->
-    <div class="lp-res-section">
+    <div class="lp-res-section" id="repositories">
       <div class="lp-res-section-label"><i class="ti ti-brand-github"></i> Repositories</div>
       <div class="lp-res-grid">
 
@@ -712,6 +755,29 @@
     document.addEventListener('click', function(e) {
       if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) closeMobileMenu();
     });
+  </script>
+  <script>
+    (function(){
+      var mainNav = document.querySelector('.lp-nav');
+      var pageNav = document.querySelector('.lp-page-nav');
+      function setPageNavTop(){ pageNav.style.top = mainNav.offsetHeight + 'px'; }
+      setPageNavTop();
+      window.addEventListener('resize', setPageNavTop);
+    })();
+    (function(){
+      var navLinks = document.querySelectorAll('.lp-page-nav-inner a');
+      var sections = Array.from(navLinks).map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+      function onScroll(){
+        var scrollY = window.scrollY + 120;
+        var current = sections[0];
+        sections.forEach(function(s){ if(s.offsetTop <= scrollY) current = s; });
+        navLinks.forEach(function(a){
+          a.classList.toggle('active', a.getAttribute('href') === '#' + current.id);
+        });
+      }
+      window.addEventListener('scroll', onScroll, {passive:true});
+      onScroll();
+    })();
   </script>
   <script>
     (function(){
