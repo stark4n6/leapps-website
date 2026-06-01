@@ -461,6 +461,26 @@
           </div>
         </a>
 
+        <a class="lp-res-card" href="https://github.com/leapps-org" target="_blank" rel="noopener">
+          <div class="lp-res-card-icon"><i class="ti ti-brand-github"></i></div>
+          <div class="lp-res-card-body">
+            <div class="lp-res-card-type"><i class="ti ti-brand-github"></i> GitHub Organization</div>
+            <div class="lp-res-card-title">LEAPPs GitHub Org</div>
+            <div class="lp-res-card-desc">The official LEAPPs GitHub organization — home to LAVA, sample projects, language resources, and supporting repositories for the suite.</div>
+            <div class="lp-res-card-link">View on GitHub <i class="ti ti-arrow-up-right"></i></div>
+          </div>
+        </a>
+
+        <a class="lp-res-card" href="https://github.com/abrignoni" target="_blank" rel="noopener">
+          <div class="lp-res-card-icon"><i class="ti ti-user-code"></i></div>
+          <div class="lp-res-card-body">
+            <div class="lp-res-card-type"><i class="ti ti-brand-github"></i> GitHub Profile</div>
+            <div class="lp-res-card-title">Alexis Brignoni</div>
+            <div class="lp-res-card-desc">GitHub profile of LEAPPs creator Alexis Brignoni — follow for iLEAPP, ALEAPP, RLEAPP, VLEAPP development activity and new parser contributions.</div>
+            <div class="lp-res-card-link">View on GitHub <i class="ti ti-arrow-up-right"></i></div>
+          </div>
+        </a>
+
       </div>
     </div>
 
@@ -760,9 +780,14 @@
     (function(){
       var mainNav = document.querySelector('.lp-nav');
       var pageNav = document.querySelector('.lp-page-nav');
-      function setPageNavTop(){ pageNav.style.top = mainNav.offsetHeight + 'px'; }
-      setPageNavTop();
-      window.addEventListener('resize', setPageNavTop);
+      var sections = document.querySelectorAll('.lp-res-section[id]');
+      function setOffsets(){
+        var offset = mainNav.offsetHeight + pageNav.offsetHeight;
+        pageNav.style.top = mainNav.offsetHeight + 'px';
+        sections.forEach(function(s){ s.style.scrollMarginTop = offset + 'px'; });
+      }
+      setOffsets();
+      window.addEventListener('resize', setOffsets);
     })();
     (function(){
       var navLinks = document.querySelectorAll('.lp-page-nav-inner a');
