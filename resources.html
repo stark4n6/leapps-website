@@ -414,6 +414,9 @@
       hamburger.classList.toggle('open');
       mobileMenu.classList.toggle('open');
     });
+    document.addEventListener('click', function(e) {
+      if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) closeMobileMenu();
+    });
   </script>
   <script>
     (function(){

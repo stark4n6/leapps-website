@@ -288,11 +288,15 @@
       return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
     }
 
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
     function truncateBody(body, max = 200) {
       if (!body) return '';
       const plain = body.replace(/#{1,6}\s/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '').trim();
-      if (plain.length <= max) return plain;
-      return plain.slice(0, max).trimEnd() + '…';
+      const truncated = plain.length <= max ? plain : plain.slice(0, max).trimEnd() + '…';
+      return escapeHtml(truncated);
     }
 
     let allEntries = [];
