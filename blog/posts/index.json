@@ -1,5 +1,13 @@
 [
   {
+    "slug": "2026-06-05-introducing-the-leapps-blog",
+    "title": "Introducing the LEAPPs Blog",
+    "date": "2026-06-05",
+    "author": "Alexis Brignoni",
+    "tags": ["announcement", "community", "contributing"],
+    "excerpt": "The LEAPPs project now has a blog — a place for artifact deep dives, tool updates, and community write-ups. Here's how it works and how you can contribute."
+  },
+  {
     "slug": "2026-06-05-welcome-to-the-leapps-blog",
     "title": "Welcome to the LEAPPs Blog",
     "date": "2026-06-05",

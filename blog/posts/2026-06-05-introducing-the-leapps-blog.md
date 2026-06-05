@@ -1,0 +1,85 @@
+---
+title: Introducing the LEAPPs Blog
+date: 2026-06-05
+author: Alexis Brignoni
+tags: [announcement, community, contributing]
+excerpt: The LEAPPs project now has a blog — a place for artifact deep dives, tool updates, and community write-ups. Here's how it works and how you can contribute.
+---
+
+# Introducing the LEAPPs Blog
+
+The LEAPPs project has always been community-driven. Researchers contribute parsers, translators submit language support, and forensic practitioners share feedback that shapes the tools. What's been missing is a dedicated space to go deeper — to explain *why* an artifact matters, walk through a forensic scenario, or document a new tool capability in detail.
+
+That's what this blog is for.
+
+## What you'll find here
+
+- **Artifact deep dives** — detailed breakdowns of what a specific artifact contains, where it lives on the device, and what it reveals during an investigation
+- **Tool updates** — when a major feature lands in iLEAPP, ALEAPP, RLEAPP, VLEAPP, or LAVA, we'll explain the context behind it
+- **How-to guides** — walkthroughs for parsing, filtering, and interpreting output from the tools
+- **Community write-ups** — forensic researchers sharing their own findings and workflows
+
+## How the blog works
+
+Posts are plain Markdown files stored directly in the [leapps-website GitHub repo](https://github.com/abrignoni/leapps-website). There's no CMS, no third-party platform — just a file in a folder and a pull request.
+
+The blog is served through the LEAPPs Cloudflare worker, which caches content at the edge so GitHub rate limits are never an issue.
+
+## How to contribute a post
+
+Anyone can submit a post. Here's how:
+
+### 1. Fork the repo
+
+Fork [abrignoni/leapps-website](https://github.com/abrignoni/leapps-website) on GitHub.
+
+### 2. Create your Markdown file
+
+Add a file to `blog/posts/` using this naming format:
+
+```
+YYYY-MM-DD-your-post-title.md
+```
+
+Start the file with YAML frontmatter:
+
+```markdown
+---
+title: Your Post Title
+date: 2026-06-05
+author: Your Name
+tags: [forensics, android, artifacts]
+excerpt: A one or two sentence summary shown on the blog index.
+---
+
+Your content starts here...
+```
+
+### 3. Add your post to the index
+
+Open `blog/posts/index.json` and add an entry at the top of the array:
+
+```json
+{
+  "slug": "2026-06-05-your-post-title",
+  "title": "Your Post Title",
+  "date": "2026-06-05",
+  "author": "Your Name",
+  "tags": ["forensics", "android", "artifacts"],
+  "excerpt": "A one or two sentence summary shown on the blog index."
+}
+```
+
+### 4. Open a pull request
+
+Submit your PR against the `main` branch. All posts are reviewed before merging.
+
+## Markdown support
+
+Posts support standard Markdown: headings, bold, italic, lists, links, images, code blocks with syntax highlighting, tables, and blockquotes. Write it the same way you'd write a GitHub README.
+
+---
+
+If you've done forensic research with any of the LEAPPs tools and want to share it, this is the place. Open a PR.
+
+— Alexis
