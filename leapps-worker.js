@@ -2,6 +2,10 @@
 // Caches GitHub API responses at the edge for 5 minutes
 
 const CACHE_TTL = 300; // seconds (5 minutes)
+const BLOG_CACHE_TTL = 600; // seconds (10 minutes) for blog content
+
+const BLOG_REPO = 'abrignoni/leapps-website';
+const BLOG_BRANCH = 'main';
 
 const ALLOWED_REPOS = [
   'abrignoni/iLEAPP',
@@ -11,7 +15,7 @@ const ALLOWED_REPOS = [
   'leapps-org/LAVA-releases',
   'leapps-org/leapps-language-resources',
 ];
- 
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -24,6 +28,11 @@ export default {
     // Only allow GET requests
     if (request.method !== 'GET') {
       return corsResponse(JSON.stringify({ error: 'Method not allowed' }), 405);
+    }
+
+    // Blog content route: /blog/posts/index.json or /blog/posts/{slug}.md
+    if (url.pathname.startsWith('/blog/posts/')) {
+      return handleBlogRequest(url, env);
     }
 
     // Parse the path — expected format: /repos/{owner}/{repo}/...
@@ -88,6 +97,52 @@ export default {
     return responseToCache;
   },
 };
+
+async function handleBlogRequest(url, env) {
+  const filePath = url.pathname.replace(/^\/blog\/posts\//, '');
+
+  // Only allow index.json and .md files, no path traversal
+  if (!filePath.match(/^(index\.json|[\w-]+\.md)$/)) {
+    return corsResponse(JSON.stringify({ error: 'Not found' }), 404);
+  }
+
+  const rawUrl = `https://raw.githubusercontent.com/${BLOG_REPO}/${BLOG_BRANCH}/blog/posts/${filePath}`;
+
+  const cache = caches.default;
+  const cacheKey = new Request(rawUrl);
+  const cached = await cache.match(cacheKey);
+  if (cached) {
+    const cachedResponse = new Response(cached.body, cached);
+    cachedResponse.headers.set('X-Cache', 'HIT');
+    cachedResponse.headers.set('Access-Control-Allow-Origin', '*');
+    return cachedResponse;
+  }
+
+  const headers = { 'User-Agent': 'LEAPPs-Worker/1.0' };
+  if (env.GITHUB_TOKEN) headers['Authorization'] = `Bearer ${env.GITHUB_TOKEN}`;
+
+  const upstream = await fetch(rawUrl, { headers });
+
+  if (!upstream.ok) {
+    return corsResponse(JSON.stringify({ error: 'Post not found' }), 404);
+  }
+
+  const contentType = filePath.endsWith('.json') ? 'application/json' : 'text/markdown; charset=utf-8';
+  const body = await upstream.text();
+
+  const responseToCache = new Response(body, {
+    status: 200,
+    headers: {
+      'Content-Type': contentType,
+      'Cache-Control': `public, max-age=${BLOG_CACHE_TTL}`,
+      'Access-Control-Allow-Origin': '*',
+      'X-Cache': 'MISS',
+    },
+  });
+  await cache.put(cacheKey, responseToCache.clone());
+
+  return responseToCache;
+}
 
 function corsResponse(body, status = 200) {
   return new Response(body, {

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — LEAPPs</title>
+  <meta name="description" content="Forensics deep dives, tool updates, artifact write-ups, and community contributions from the LEAPPs project." />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://leapps.org/blog" />
+  <meta property="og:title" content="Blog — LEAPPs" />
+  <meta property="og:description" content="Forensics deep dives, tool updates, artifact write-ups, and community contributions from the LEAPPs project." />
+  <meta property="og:site_name" content="LEAPPs" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=IBM+Plex+Mono:wght@400;500&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #F5C020;
+      --gold-dk: #D4A010;
+      --off-black: #0E0E0E;
+      --surface: #161616;
+      --border: #2C2C2C;
+      --text: #F0EDE6;
+      --muted: #888888;
+      --font-head: 'Barlow Condensed', sans-serif;
+      --font-body: 'Barlow', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--off-black);
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* Nav */
+    .lp-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(14,14,14,0.96);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 1000;
+    }
+    .lp-nav-logo {
+      font-family: var(--font-head);
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: .05em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .lp-nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .lp-nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .875rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .lp-nav-links a:hover,
+    .lp-nav-links a.active { color: var(--gold); }
+    .lp-nav-cta {
+      background: var(--gold);
+      color: var(--off-black) !important;
+      padding: .5rem 1.25rem;
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: .9rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      text-decoration: none !important;
+      transition: background .2s;
+    }
+    .lp-nav-cta:hover { background: var(--gold-dk); }
+
+    /* Page layout */
+    .blog-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    /* Header */
+    .blog-header {
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2rem;
+    }
+    .blog-header h1 {
+      font-family: var(--font-head);
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      line-height: 1;
+      color: var(--gold);
+    }
+    .blog-header p {
+      margin-top: .75rem;
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 540px;
+    }
+    .blog-header-actions {
+      margin-top: 1.25rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .8rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: .45rem 1rem;
+      transition: border-color .2s, color .2s;
+      font-family: var(--font-head);
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* Post list */
+    .post-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .post-card {
+      display: block;
+      text-decoration: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.5rem 1.75rem;
+      transition: border-color .2s, background .2s;
+    }
+    .post-card:hover {
+      border-color: var(--gold);
+      background: #1c1c1c;
+    }
+    .post-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: var(--font-mono);
+      font-size: .75rem;
+      color: var(--muted);
+      margin-bottom: .6rem;
+    }
+    .post-card-meta .date { color: var(--gold); }
+    .post-card h2 {
+      font-family: var(--font-head);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: .5rem;
+      line-height: 1.2;
+    }
+    .post-card p {
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.5;
+    }
+    .post-card-tags {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .tag {
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: .15rem .5rem;
+      letter-spacing: .05em;
+    }
+    .post-card:hover .tag { border-color: #3a3a3a; }
+
+    /* Loading / error */
+    .state-msg {
+      text-align: center;
+      padding: 4rem 0;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: .875rem;
+    }
+    .state-msg .icon { font-size: 2rem; margin-bottom: 1rem; color: var(--gold); }
+
+    /* Footer */
+    .lp-footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      font-size: .8rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+    }
+    .lp-footer a { color: var(--muted); text-decoration: none; }
+    .lp-footer a:hover { color: var(--gold); }
+
+    @media (max-width: 640px) {
+      .lp-nav-links { display: none; }
+      .blog-header h1 { font-size: 2.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="lp-nav">
+    <a href="https://leapps.org/" class="lp-nav-logo">LEAPPs</a>
+    <ul class="lp-nav-links">
+      <li><a href="https://leapps.org/">Home</a></li>
+      <li><a href="https://leapps.org/releases">Releases</a></li>
+      <li><a href="https://leapps.org/artifacts">Artifacts</a></li>
+      <li><a href="https://leapps.org/stats">Stats</a></li>
+      <li><a href="https://leapps.org/changelog">Changelog</a></li>
+      <li><a href="https://leapps.org/blog" class="active">Blog</a></li>
+      <li><a href="https://leapps.org/resources">Resources</a></li>
+      <li><a href="https://github.com/abrignoni" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+    <a href="https://leapps.org/#download" class="lp-nav-cta">Get Tools</a>
+  </nav>
+
+  <main class="blog-wrap">
+    <header class="blog-header">
+      <h1>Blog</h1>
+      <p>Forensics deep dives, tool updates, artifact write-ups, and community contributions.</p>
+      <div class="blog-header-actions">
+        <a href="https://github.com/abrignoni/leapps-website/blob/main/blog/posts/" target="_blank" rel="noopener" class="btn-outline">
+          <i class="ti ti-brand-github"></i> View on GitHub
+        </a>
+        <a href="https://github.com/abrignoni/leapps-website/blob/main/blog/posts/index.json" target="_blank" rel="noopener" class="btn-outline">
+          <i class="ti ti-rss"></i> RSS / JSON
+        </a>
+      </div>
+    </header>
+
+    <div id="post-list" class="post-list">
+      <div class="state-msg">
+        <div class="icon"><i class="ti ti-loader-2"></i></div>
+        Loading posts…
+      </div>
+    </div>
+  </main>
+
+  <footer class="lp-footer">
+    <p>LEAPPs &copy; <span id="yr"></span> &mdash; <a href="https://leapps.org/">leapps.org</a> &mdash; <a href="https://github.com/abrignoni" target="_blank" rel="noopener">GitHub</a></p>
+  </footer>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    const WORKER = 'https://leapps-worker.alexbrignoni.workers.dev';
+
+    function formatDate(iso) {
+      const d = new Date(iso + 'T00:00:00');
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function slugToUrl(slug) {
+      return `https://leapps.org/blog-post?post=${encodeURIComponent(slug)}`;
+    }
+
+    async function loadPosts() {
+      const container = document.getElementById('post-list');
+      try {
+        const res = await fetch(`${WORKER}/blog/posts/index.json`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const posts = await res.json();
+
+        if (!posts.length) {
+          container.innerHTML = `<div class="state-msg"><div class="icon"><i class="ti ti-pencil-off"></i></div>No posts yet.</div>`;
+          return;
+        }
+
+        // Newest first
+        posts.sort((a, b) => b.date.localeCompare(a.date));
+
+        container.innerHTML = posts.map(post => `
+          <a class="post-card" href="${slugToUrl(post.slug)}">
+            <div class="post-card-meta">
+              <span class="date">${formatDate(post.date)}</span>
+              <span>${post.author}</span>
+            </div>
+            <h2>${post.title}</h2>
+            <p>${post.excerpt}</p>
+            ${post.tags && post.tags.length ? `
+              <div class="post-card-tags">
+                ${post.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+              </div>` : ''}
+          </a>
+        `).join('');
+      } catch (err) {
+        container.innerHTML = `
+          <div class="state-msg">
+            <div class="icon"><i class="ti ti-alert-triangle"></i></div>
+            Failed to load posts. <a href="https://github.com/abrignoni/leapps-website/tree/main/blog/posts" target="_blank" rel="noopener" style="color:var(--gold)">View on GitHub</a>
+          </div>`;
+        console.error('Blog index error:', err);
+      }
+    }
+
+    loadPosts();
+  </script>
+</body>
+</html>
