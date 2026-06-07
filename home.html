@@ -14,6 +14,7 @@
   <meta property="og:image" content="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/1778253329900-PD4YWMXV784IQU8LUW74/LEAPPs_logo_with_icons.png?content-type=image%2Fpng" />
   <meta property="og:image:alt" content="LEAPPs — ALEAPP, iLEAPP, RLEAPP, VLEAPP forensics tools" />
   <meta property="og:site_name" content="LEAPPs" />
+  <meta property="og:locale" content="en_US" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -24,6 +25,8 @@
   <link rel="icon" type="image/png" href="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/70fbe416-092d-427d-a8d0-4eedbc92df16/leapps-favicon-512.png?content-type=image%2Fpng" />
   <link rel="apple-touch-icon" href="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/70fbe416-092d-427d-a8d0-4eedbc92df16/leapps-favicon-512.png?content-type=image%2Fpng" />
   <meta name="theme-color" content="#F5C020" />
+  <meta name="author" content="Alexis Brignoni" />
+  <meta name="google-site-verification" content="4NRgfrYq66eJKZVReVwQNbH_cyJI4bLQXXnrm8WuW9A" />
   <link rel="canonical" href="https://leapps.org/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -957,7 +960,15 @@
       {
         "@type": "WebSite",
         "name": "LEAPPs",
-        "url": "https://leapps.org"
+        "url": "https://leapps.org",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://leapps.org/artifacts?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
       },
       {
         "@type": "SoftwareApplication",
@@ -1103,7 +1114,7 @@
     <div class="lp-tools-grid">
       <div class="lp-tool-card">
         <div class="lp-tool-tag">iOS · iPadOS</div>
-        <div class="lp-tool-name"><img src="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/f0d23154-ad39-40d4-b08d-3d1d3641d220/iLEAPP_icon_1024.png?content-type=image%2Fpng" alt="" class="lp-tool-logo">iLEAPP</div>
+        <div class="lp-tool-name"><img src="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/f0d23154-ad39-40d4-b08d-3d1d3641d220/iLEAPP_icon_1024.png?content-type=image%2Fpng" alt="iLEAPP logo" class="lp-tool-logo">iLEAPP</div>
         <div class="lp-tool-full">iOS Logs, Events and Plists Parser</div>
         <div class="lp-tool-desc">Parse artifacts from iOS and iPadOS device extractions. Supports full file system, logical, and backup formats.</div>
         <div class="lp-tool-links">
@@ -1113,7 +1124,7 @@
       </div>
       <div class="lp-tool-card">
         <div class="lp-tool-tag">Android</div>
-        <div class="lp-tool-name"><img src="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/f4ae4783-bf67-43af-b20f-8f61fc7d66d1/ALEAPP_icon_1024.png?content-type=image%2Fpng" alt="" class="lp-tool-logo">ALEAPP</div>
+        <div class="lp-tool-name"><img src="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/f4ae4783-bf67-43af-b20f-8f61fc7d66d1/ALEAPP_icon_1024.png?content-type=image%2Fpng" alt="ALEAPP logo" class="lp-tool-logo">ALEAPP</div>
         <div class="lp-tool-full">Android Logs, Events and Plists Parser</div>
         <div class="lp-tool-desc">Comprehensive artifact parsing for Android devices including databases, logs, and application data.</div>
         <div class="lp-tool-links">
@@ -1123,7 +1134,7 @@
       </div>
       <div class="lp-tool-card">
         <div class="lp-tool-tag">ISP Returns</div>
-        <div class="lp-tool-name"><img src="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/cde58999-6e46-4ffe-bfc3-68bda6e732bf/RLEAPP_icon_1024.png?content-type=image%2Fpng" alt="" class="lp-tool-logo">RLEAPP</div>
+        <div class="lp-tool-name"><img src="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/cde58999-6e46-4ffe-bfc3-68bda6e732bf/RLEAPP_icon_1024.png?content-type=image%2Fpng" alt="RLEAPP logo" class="lp-tool-logo">RLEAPP</div>
         <div class="lp-tool-full">Returns, Logs, Events and Properties Parser</div>
         <div class="lp-tool-desc">ISP returns artifact parsing. Supports user generated data stores and ISP provided data from social media sites.</div>
         <div class="lp-tool-links">
@@ -1133,7 +1144,7 @@
       </div>
       <div class="lp-tool-card">
         <div class="lp-tool-tag">Vehicle Systems</div>
-        <div class="lp-tool-name"><img src="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/ecef08fb-97e0-4790-9cf5-a68eef0863f2/VLEAPP_icon_1024.png?content-type=image%2Fpng" alt="" class="lp-tool-logo">VLEAPP</div>
+        <div class="lp-tool-name"><img src="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/ecef08fb-97e0-4790-9cf5-a68eef0863f2/VLEAPP_icon_1024.png?content-type=image%2Fpng" alt="VLEAPP logo" class="lp-tool-logo">VLEAPP</div>
         <div class="lp-tool-full">Vehicle Logs, Events and Plists Parser</div>
         <div class="lp-tool-desc">Emerging vehicle infotainment and telematics forensics. Parse data from connected car systems and IVI units.</div>
         <div class="lp-tool-links">
@@ -1143,7 +1154,7 @@
       </div>
       <div class="lp-tool-card lp-tool-card-lava">
         <div class="lp-tool-tag">Visualization</div>
-        <div class="lp-tool-name"><img src="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/d68ed267-7ed3-4a74-ad58-eb2e30527d3d/LAVA_icon_1024.png?content-type=image%2Fpng" alt="" class="lp-tool-logo">LAVA</div>
+        <div class="lp-tool-name"><img src="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/d68ed267-7ed3-4a74-ad58-eb2e30527d3d/LAVA_icon_1024.png?content-type=image%2Fpng" alt="LAVA logo" class="lp-tool-logo">LAVA</div>
         <div class="lp-tool-full">LEAPP Artifact Viewer App</div>
         <div class="lp-tool-desc">Turn parsed data into clear visual reports.</div>
         <div class="lp-tool-links">
