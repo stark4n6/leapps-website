@@ -207,7 +207,7 @@ async function handleBlogFeed(env) {
 
   const upstream = await fetch(indexUrl, { headers });
   if (!upstream.ok) {
-    return new Response('Failed to load feed', { status: 502 });
+    return corsResponse(JSON.stringify({ error: 'Failed to load blog feed' }), 502);
   }
 
   const posts = await upstream.json();
@@ -223,7 +223,7 @@ async function handleBlogFeed(env) {
       <link>${link}</link>
       <guid isPermaLink="true">${link}</guid>
       <pubDate>${pubDate}</pubDate>
-      <author>${post.author || ''}</author>
+      <author>${(post.author || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</author>
       <description>${desc}</description>
     </item>`;
   }).join('');
