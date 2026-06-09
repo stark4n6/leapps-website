@@ -721,6 +721,11 @@
     .lp-contrib-commits { font-family: var(--font-mono); font-size: .65rem; color: #555; }
     .lp-contrib-tools { display: flex; gap: .3rem; flex-wrap: wrap; justify-content: flex-end; }
     .lp-contrib-tag { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .08em; padding: .15rem .45rem; border: 1px solid var(--border); color: var(--muted); }
+    .lp-contrib-tag-ileapp { background: rgba(227,6,19,.15); color: #E30613; border: 1px solid rgba(227,6,19,.3); }
+    .lp-contrib-tag-aleapp { background: rgba(164,198,57,.15); color: #A4C639; border: 1px solid rgba(164,198,57,.3); }
+    .lp-contrib-tag-rleapp { background: rgba(75,163,199,.15); color: #4BA3C7; border: 1px solid rgba(75,163,199,.3); }
+    .lp-contrib-tag-vleapp { background: rgba(83,29,171,.15); color: #531dab; border: 1px solid rgba(83,29,171,.3); }
+    .lp-contrib-tag-lava { background: rgba(245,192,32,.15); color: var(--gold); border: 1px solid rgba(245,192,32,.3); }
     .lp-contrib-loading { padding: 2rem; text-align: center; font-family: var(--font-mono); font-size: .8rem; color: var(--muted); background: var(--surface); border: 1px solid var(--border); }
     .lp-contrib-toggle {
       display: flex; align-items: center; justify-content: space-between;
@@ -1485,7 +1490,11 @@
       }
 
       function buildRow(c) {
-        const tools = c.tools.map(t => `<span class="lp-contrib-tag">${t}</span>`).join('');
+        const toolClass = { 'iLEAPP': 'ileapp', 'ALEAPP': 'aleapp', 'RLEAPP': 'rleapp', 'VLEAPP': 'vleapp', 'LAVA': 'lava' };
+        const tools = c.tools.map(t => {
+          const cls = toolClass[t];
+          return `<span class="lp-contrib-tag${cls ? ' lp-contrib-tag-' + cls : ''}">${t}</span>`;
+        }).join('');
         const avatar = c.avatar
           ? `<img src="${c.avatar}" alt="${c.login}" loading="lazy" />`
           : getInitials(c.login);
