@@ -4,22 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Blog — LEAPPs</title>
-  <meta name="description" content="" />
+  <meta name="description" content="News, updates and forensics insights from the LEAPPs project." />
 
-  <!-- Open Graph (populated by JS) -->
+  <!-- Open Graph (defaults overridden by JS once post loads) -->
   <meta property="og:type" content="article" />
-  <meta property="og:url" content="" />
-  <meta property="og:title" content="" />
-  <meta property="og:description" content="" />
+  <meta property="og:url" content="https://leapps.org/blog" />
+  <meta property="og:title" content="LEAPPs Blog" />
+  <meta property="og:description" content="News, updates and forensics insights from the LEAPPs project." />
   <meta property="og:image" content="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/1778253329900-PD4YWMXV784IQU8LUW74/LEAPPs_logo_with_icons.png?content-type=image%2Fpng" />
   <meta property="og:image:alt" content="LEAPPs — ALEAPP, iLEAPP, RLEAPP, VLEAPP forensics tools" />
   <meta property="og:site_name" content="LEAPPs" />
   <meta property="og:locale" content="en_US" />
+  <meta property="article:published_time" content="" />
+  <meta property="article:author" content="Alexis Brignoni" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="" />
-  <meta name="twitter:description" content="" />
+  <meta name="twitter:title" content="LEAPPs Blog" />
+  <meta name="twitter:description" content="News, updates and forensics insights from the LEAPPs project." />
   <meta name="twitter:image" content="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/1778253329900-PD4YWMXV784IQU8LUW74/LEAPPs_logo_with_icons.png?content-type=image%2Fpng" />
-  <link rel="canonical" href="" />
+  <link rel="canonical" href="https://leapps.org/blog" />
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/70fbe416-092d-427d-a8d0-4eedbc92df16/leapps-favicon-512.png?content-type=image%2Fpng" />
   <link rel="apple-touch-icon" href="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/70fbe416-092d-427d-a8d0-4eedbc92df16/leapps-favicon-512.png?content-type=image%2Fpng" />
@@ -548,6 +550,12 @@
         document.querySelector('meta[name="twitter:title"]').setAttribute('content', `${title} — LEAPPs Blog`);
         document.querySelector('meta[name="twitter:description"]').setAttribute('content', excerpt);
         document.querySelector('link[rel="canonical"]').setAttribute('href', postUrl);
+        if (meta.date) {
+          document.querySelector('meta[property="article:published_time"]').setAttribute('content', new Date(meta.date).toISOString());
+        }
+        if (meta.author) {
+          document.querySelector('meta[property="article:author"]').setAttribute('content', meta.author);
+        }
         document.getElementById('breadcrumb-title').textContent = title;
 
         const tagsHtml = meta.tags && meta.tags.length
