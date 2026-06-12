@@ -82,5 +82,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase
           git add data/downloads.json
-          git diff --cached --quiet || (git commit -m "chore: daily download snapshot $(date -u +%Y-%m-%d)" && git pull --rebase && git push)
+          git diff --cached --quiet || git commit -m "chore: daily download snapshot $(date -u +%Y-%m-%d)"
+          git push
