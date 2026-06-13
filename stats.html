@@ -121,6 +121,7 @@
     .lp-dl-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 1.5rem; }
     .lp-dl-summary-cell { background: var(--off-black); padding: 1.25rem 1rem; transition: background .2s; }
     .lp-dl-summary-cell:hover { background: var(--surface); }
+    .lp-dl-summary-cell.active { background: var(--surface); outline: 1px solid var(--gold); }
     .lp-dl-summary-num { font-family: var(--font-head); font-size: 2rem; font-weight: 900; color: var(--text); line-height: 1; margin-bottom: .35rem; }
     .lp-dl-summary-lbl { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
     .lp-dl-tool-rows { border: 1px solid var(--border); margin-bottom: 1.5rem; }
@@ -625,6 +626,50 @@
     let dlHistoryChart = null;
     let dlSnapshots = [];
 
+    let dlActivePeriod = 'alltime';
+
+    function toolCountsForPeriod(period) {
+      const tools = Object.keys(TOOL_LABELS);
+      const latest = dlSnapshots[dlSnapshots.length - 1];
+      const prev = dlSnapshots[dlSnapshots.length - 2];
+      if (period === 'alltime') {
+        return tools.reduce((m, k) => { m[k] = latest.totals[k] || 0; return m; }, {});
+      }
+      if (period === 'today') {
+        return tools.reduce((m, k) => { m[k] = Math.max(0, (latest.totals[k]||0) - (prev.totals[k]||0)); return m; }, {});
+      }
+      const n = period === '7d' ? 7 : 30;
+      const slice = dlSnapshots.length >= n + 1 ? dlSnapshots.slice(-(n + 1)) : dlSnapshots;
+      return tools.reduce((m, k) => {
+        m[k] = slice.slice(1).reduce((s, snap, i) => s + Math.max(0, (snap.totals[k]||0) - (slice[i].totals[k]||0)), 0);
+        return m;
+      }, {});
+    }
+
+    function renderToolRows(period) {
+      const tools = Object.keys(TOOL_LABELS);
+      const counts = toolCountsForPeriod(period);
+      const maxVal = Math.max(...Object.values(counts), 1);
+      const prefix = period === 'alltime' ? '' : '+';
+      const suffix = { alltime: '', today: ' today', '7d': ' / 7d', '30d': ' / 30d' }[period];
+      document.getElementById('dl-tool-rows').innerHTML = tools.map(k => {
+        const val = counts[k] || 0;
+        const pct = Math.round(val / maxVal * 100);
+        const label = val > 0 ? prefix + fmt(val) + suffix : (period === 'alltime' ? '0' : '');
+        return `<div class="lp-dl-tool-row">
+          <div class="lp-dl-tool-dot" style="background:${TOOL_COLORS[k]}"></div>
+          <div class="lp-dl-tool-name">${TOOL_LABELS[k]}</div>
+          <div class="lp-dl-bar-wrap"><div class="lp-dl-bar" style="width:${pct}%;background:${TOOL_COLORS[k]}"></div></div>
+          <div class="lp-dl-count">${period === 'alltime' ? fmt(val) : (val > 0 ? prefix + fmt(val) : '—')}</div>
+          <div class="lp-dl-daily" style="color:${TOOL_COLORS[k]}">${val > 0 && period !== 'alltime' ? suffix.trim() : ''}</div>
+        </div>`;
+      }).join('');
+
+      document.querySelectorAll('.lp-dl-summary-cell').forEach(el => {
+        el.classList.toggle('active', el.dataset.period === period);
+      });
+    }
+
     function renderDlHistory(days) {
       const container = document.getElementById('dl-history-content');
       if (dlSnapshots.length < 2) {
@@ -650,41 +695,26 @@
       const last30 = dlSnapshots.length >= 31 ? dlSnapshots.slice(-31) : dlSnapshots;
       const sum30 = last30.slice(1).reduce((s, snap, i) => s + tools.reduce((ts, k) => ts + Math.max(0, (snap.totals[k]||0) - (last30[i].totals[k]||0)), 0), 0);
 
-      const maxTotal = Math.max(...tools.map(k => latest.totals[k]||0));
-
       container.innerHTML = `
         <div class="lp-dl-summary">
-          <div class="lp-dl-summary-cell">
+          <div class="lp-dl-summary-cell active" data-period="alltime" onclick="dlActivePeriod='alltime';renderToolRows('alltime')" style="cursor:pointer">
             <div class="lp-dl-summary-num" style="color:var(--gold)">${fmt(total)}</div>
             <div class="lp-dl-summary-lbl">All time</div>
           </div>
-          <div class="lp-dl-summary-cell">
+          <div class="lp-dl-summary-cell" data-period="today" onclick="dlActivePeriod='today';renderToolRows('today')" style="cursor:pointer">
             <div class="lp-dl-summary-num" style="color:#A4C639">${todayDelta > 0 ? '+' + fmt(todayDelta) : '—'}</div>
             <div class="lp-dl-summary-lbl">Today</div>
           </div>
-          <div class="lp-dl-summary-cell">
+          <div class="lp-dl-summary-cell" data-period="7d" onclick="dlActivePeriod='7d';renderToolRows('7d')" style="cursor:pointer">
             <div class="lp-dl-summary-num">${dlSnapshots.length >= 8 ? fmt(sum7) : '—'}</div>
             <div class="lp-dl-summary-lbl">Last 7 days</div>
           </div>
-          <div class="lp-dl-summary-cell">
+          <div class="lp-dl-summary-cell" data-period="30d" onclick="dlActivePeriod='30d';renderToolRows('30d')" style="cursor:pointer">
             <div class="lp-dl-summary-num">${dlSnapshots.length >= 31 ? fmt(sum30) : '—'}</div>
             <div class="lp-dl-summary-lbl">Last 30 days</div>
           </div>
         </div>
-        <div class="lp-dl-tool-rows">
-          ${tools.map(k => {
-            const count = latest.totals[k] || 0;
-            const delta = prev ? Math.max(0, count - (prev.totals[k]||0)) : 0;
-            const pct = maxTotal > 0 ? Math.round(count / maxTotal * 100) : 0;
-            return `<div class="lp-dl-tool-row">
-              <div class="lp-dl-tool-dot" style="background:${TOOL_COLORS[k]}"></div>
-              <div class="lp-dl-tool-name">${TOOL_LABELS[k]}</div>
-              <div class="lp-dl-bar-wrap"><div class="lp-dl-bar" style="width:${pct}%;background:${TOOL_COLORS[k]}"></div></div>
-              <div class="lp-dl-count">${fmt(count)}</div>
-              <div class="lp-dl-daily" style="color:${TOOL_COLORS[k]}">${delta > 0 ? '+' + fmt(delta) + ' today' : ''}</div>
-            </div>`;
-          }).join('')}
-        </div>
+        <div id="dl-tool-rows" class="lp-dl-tool-rows"></div>
         <div class="lp-dl-chart-card">
           <div class="lp-dl-chart-header">
             <div class="lp-dl-chart-title">Daily downloads</div>
@@ -696,6 +726,8 @@
           </div>
           <div style="position:relative;height:180px"><canvas id="dlHistoryChart" role="img" aria-label="Daily download history chart"></canvas></div>
         </div>`;
+
+      renderToolRows(dlActivePeriod);
 
       if (dlHistoryChart) { dlHistoryChart.destroy(); dlHistoryChart = null; }
 
