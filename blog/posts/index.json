@@ -1,5 +1,13 @@
 [
   {
+    "slug": "2026-06-24-ios-wallpaper-springboard",
+    "title": "Recovering Pre-iOS 16 Wallpaper from SpringBoard",
+    "date": "2026-06-24",
+    "author": "James Habben",
+    "tags": ["iLEAPP", "iOS", "SpringBoard", "artifacts", "media"],
+    "excerpt": "A quick research note on extracting older iOS wallpaper files from SpringBoard, including legacy cpbitmap conversion and JPG thumbnail handling in iLEAPP."
+  },
+  {
     "slug": "2026-06-14-how-to-write-an-ileapp-module",
     "title": "How to Write an iLEAPP Module",
     "date": "2026-06-14",
