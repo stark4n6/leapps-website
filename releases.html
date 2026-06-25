@@ -925,7 +925,14 @@
       }
     }
 
-    tools.forEach(fetchReleases);
+    Promise.all(tools.map(fetchReleases)).then(() => {
+      if (window.location.hash) {
+        const target = document.querySelector(window.location.hash);
+        if (target) {
+          setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 100);
+        }
+      }
+    });
 
     // Mobile hamburger menu
     const hamburger = document.getElementById('lp-hamburger');
