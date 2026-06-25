@@ -10,17 +10,19 @@
   <meta property="og:url" content="https://leapps.org/artifacts" />
   <meta property="og:title" content="Artifacts — LEAPPs" />
   <meta property="og:description" content="Browse all artifacts supported by iLEAPP, ALEAPP, RLEAPP, and VLEAPP." />
-  <meta property="og:image" content="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/1778253329900-PD4YWMXV784IQU8LUW74/LEAPPs_logo_with_icons.png?content-type=image%2Fpng" />
+  <meta property="og:image" content="https://leapps.org/blog/og/default.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="LEAPPs — ALEAPP, iLEAPP, RLEAPP, VLEAPP forensics tools" />
   <meta property="og:site_name" content="LEAPPs" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Artifacts — LEAPPs" />
   <meta name="twitter:description" content="Browse all artifacts supported by iLEAPP, ALEAPP, RLEAPP, and VLEAPP." />
-  <meta name="twitter:image" content="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/1778253329900-PD4YWMXV784IQU8LUW74/LEAPPs_logo_with_icons.png?content-type=image%2Fpng" />
+  <meta name="twitter:image" content="https://leapps.org/blog/og/default.png" />
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/70fbe416-092d-427d-a8d0-4eedbc92df16/leapps-favicon-512.png?content-type=image%2Fpng" />
-  <link rel="apple-touch-icon" href="https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/70fbe416-092d-427d-a8d0-4eedbc92df16/leapps-favicon-512.png?content-type=image%2Fpng" />
+  <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/abrignoni/leapps-website@main/logos/leapps-favicon-512.png" />
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/abrignoni/leapps-website@main/logos/leapps-favicon-512.png" />
   <meta name="theme-color" content="#F5C020" />
   <meta name="author" content="Alexis Brignoni" />
   <meta name="google-site-verification" content="4NRgfrYq66eJKZVReVwQNbH_cyJI4bLQXXnrm8WuW9A" />
@@ -61,8 +63,8 @@
     .lp-nav-dropdown-trigger i.lp-chev { font-size: .75rem; transition: transform .2s; }
     .lp-nav-dropdown:hover .lp-nav-dropdown-trigger { color: var(--gold); }
     .lp-nav-dropdown:hover .lp-nav-dropdown-trigger i.lp-chev { transform: rotate(180deg); }
-    .lp-nav-dropdown-menu { display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background: rgba(14,14,14,.98); backdrop-filter: blur(8px); border: 1px solid var(--border); min-width: 180px; z-index: 1001; flex-direction: column; padding-top: 12px; }
-    .lp-nav-dropdown-menu::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 12px; background: transparent; }
+    .lp-nav-dropdown-menu { display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background: rgba(14,14,14,.98); backdrop-filter: blur(8px); border: 1px solid var(--border); min-width: 180px; z-index: 1001; flex-direction: column; margin-top: 8px; border-radius: 4px; }
+    .lp-nav-dropdown-menu::before { content: ''; position: absolute; top: -12px; left: 0; right: 0; height: 12px; background: transparent; }
     .lp-nav-dropdown:hover .lp-nav-dropdown-menu { display: flex; }
     .lp-nav-dropdown-menu a { color: var(--muted) !important; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; padding: .65rem 1rem; text-decoration: none !important; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: .5rem; transition: color .2s, background .2s; }
     .lp-nav-dropdown-menu a:last-child { border-bottom: none; }
@@ -95,7 +97,7 @@
 
     /* STATS ROW */
     .lp-artifact-stats { display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
-    .lp-artifact-stat-num { font-family: var(--font-head); font-size: 1.5rem; font-weight: 900; color: var(--gold); }
+    .lp-artifact-stat-num { font-family: var(--font-head); font-size: 1.5rem; font-weight: 900; color: var(--gold); transition: color 0.3s ease; }
     .lp-artifact-stat-lbl { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-top: .1rem; }
     .lp-stat-filtered { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: .75rem; display: none; }
 
@@ -565,7 +567,7 @@
 
       const ghBase = `https://github.com/${TOOLS.find(t => t.id === a.toolId)?.repo}/blob/main/${ARTIFACTS_PATH}/${escHtml(a.filename)}`;
 
-      return `<tr data-tool="${escHtml(a.toolId)}" data-category="${escHtml(a.category)}" data-search="${escHtml((a.name + ' ' + a.category + ' ' + a.description + ' ' + a.paths.join(' ')).toLowerCase())}">
+      return `<tr data-tool="${escHtml(a.toolId)}" data-category="${escHtml(a.category)}" data-search="${escHtml((a.name + ' ' + a.category + ' ' + a.description + ' ' + a.paths.join(' ') + ' ' + a.filename).toLowerCase())}">
         <td>
           <div class="lp-art-name"><a href="${ghBase}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color=''">${escHtml(a.name)}</a></div>
           ${a.description ? `<div class="lp-art-desc">${escHtml(a.description)}</div>` : ''}
@@ -605,8 +607,10 @@
         }
       });
 
+      const statColor = activeTool === 'all' ? 'var(--gold)' : `var(--color-${activeTool})`;
+
       const meta = document.getElementById('results-meta');
-      meta.innerHTML = `Showing <span>${visible}</span> of <span>${allArtifacts.length}</span> artifacts`;
+      meta.innerHTML = `Showing <span style="color: ${statColor}; transition: color .3s;">${visible}</span> of <span style="color: ${statColor}; transition: color .3s;">${allArtifacts.length}</span> artifacts`;
       document.getElementById('no-results').classList.toggle('visible', visible === 0 && allArtifacts.length > 0);
 
       const isFiltered = activeTool !== 'all' || activeCategory !== 'all' || searchQuery;
@@ -614,6 +618,11 @@
       document.getElementById('stat-categories').textContent = visibleCats.size.toLocaleString();
       document.getElementById('stat-tools').textContent = visibleTools.size.toLocaleString();
       document.getElementById('stat-filtered-label').style.display = isFiltered ? 'block' : 'none';
+
+      document.querySelectorAll('.lp-artifact-stat-num').forEach(el => {
+        el.style.color = statColor;
+        el.style.transition = 'color .3s';
+      });
     }
 
     function renderAll() {
@@ -668,6 +677,18 @@
       }
 
       renderAll();
+      applyDeepLink();
+    }
+
+    // Pre-filter from a ?q= deep link (e.g. arriving from the global navbar search)
+    function applyDeepLink() {
+      const q = new URLSearchParams(location.search).get('q');
+      if (!q) return;
+      searchQuery = q.trim().toLowerCase();
+      const input = document.getElementById('search-input');
+      if (input) input.value = q;
+      applyFilters();
+      if (input) input.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     // ── EVENT LISTENERS ──────────────────────────────────────────────────────

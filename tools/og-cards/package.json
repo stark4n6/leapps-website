@@ -1,0 +1,11 @@
+{
+  "name": "leapps-og-cards",
+  "private": true,
+  "type": "module",
+  "description": "Generates per-post Open Graph social cards for the LEAPPs blog",
+  "scripts": { "build": "node generate.mjs" },
+  "dependencies": {
+    "satori": "^0.12.1",
+    "@resvg/resvg-js": "^2.6.2"
+  }
+}
