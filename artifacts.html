@@ -95,7 +95,7 @@
 
     /* STATS ROW */
     .lp-artifact-stats { display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
-    .lp-artifact-stat-num { font-family: var(--font-head); font-size: 1.5rem; font-weight: 900; color: var(--gold); }
+    .lp-artifact-stat-num { font-family: var(--font-head); font-size: 1.5rem; font-weight: 900; color: var(--gold); transition: color 0.3s ease; }
     .lp-artifact-stat-lbl { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-top: .1rem; }
     .lp-stat-filtered { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: .75rem; display: none; }
 
@@ -605,8 +605,10 @@
         }
       });
 
+      const statColor = activeTool === 'all' ? 'var(--gold)' : `var(--color-${activeTool})`;
+
       const meta = document.getElementById('results-meta');
-      meta.innerHTML = `Showing <span>${visible}</span> of <span>${allArtifacts.length}</span> artifacts`;
+      meta.innerHTML = `Showing <span style="color: ${statColor}; transition: color .3s;">${visible}</span> of <span style="color: ${statColor}; transition: color .3s;">${allArtifacts.length}</span> artifacts`;
       document.getElementById('no-results').classList.toggle('visible', visible === 0 && allArtifacts.length > 0);
 
       const isFiltered = activeTool !== 'all' || activeCategory !== 'all' || searchQuery;
@@ -614,6 +616,11 @@
       document.getElementById('stat-categories').textContent = visibleCats.size.toLocaleString();
       document.getElementById('stat-tools').textContent = visibleTools.size.toLocaleString();
       document.getElementById('stat-filtered-label').style.display = isFiltered ? 'block' : 'none';
+
+      document.querySelectorAll('.lp-artifact-stat-num').forEach(el => {
+        el.style.color = statColor;
+        el.style.transition = 'color .3s';
+      });
     }
 
     function renderAll() {
