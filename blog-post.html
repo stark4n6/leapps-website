@@ -11,7 +11,9 @@
   <meta property="og:url" content="https://leapps.org/blog" />
   <meta property="og:title" content="LEAPPs Blog" />
   <meta property="og:description" content="News, updates and forensics insights from the LEAPPs project." />
-  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/abrignoni/leapps-website@main/logos/LEAPPs_logo_with_icons.png" />
+  <meta property="og:image" content="https://leapps.org/blog/og/default.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="LEAPPs — ALEAPP, iLEAPP, RLEAPP, VLEAPP forensics tools" />
   <meta property="og:site_name" content="LEAPPs" />
   <meta property="og:locale" content="en_US" />
@@ -20,7 +22,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="LEAPPs Blog" />
   <meta name="twitter:description" content="News, updates and forensics insights from the LEAPPs project." />
-  <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/abrignoni/leapps-website@main/logos/LEAPPs_logo_with_icons.png" />
+  <meta name="twitter:image" content="https://leapps.org/blog/og/default.png" />
   <link rel="canonical" href="https://leapps.org/blog" />
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/abrignoni/leapps-website@main/logos/leapps-favicon-512.png" />
@@ -698,6 +700,9 @@
         document.querySelector('meta[property="og:title"]').setAttribute('content', `${title} — LEAPPs Blog`);
         document.querySelector('meta[property="og:description"]').setAttribute('content', excerpt);
         document.querySelector('meta[property="og:url"]').setAttribute('content', postUrl);
+        const cardUrl = `https://leapps.org/blog/og/${encodeURIComponent(slug)}.png`;
+        document.querySelector('meta[property="og:image"]').setAttribute('content', cardUrl);
+        document.querySelector('meta[name="twitter:image"]').setAttribute('content', cardUrl);
         document.querySelector('meta[name="twitter:title"]').setAttribute('content', `${title} — LEAPPs Blog`);
         document.querySelector('meta[name="twitter:description"]').setAttribute('content', excerpt);
         document.querySelector('link[rel="canonical"]').setAttribute('href', postUrl);

@@ -374,7 +374,10 @@ async function handleBlogShare(url, env) {
 
   const title = post ? `${post.title} — LEAPPs Blog` : 'LEAPPs Blog';
   const description = post ? post.excerpt : 'News, updates and forensics insights from the LEAPPs project.';
-  const image = 'https://images.squarespace-cdn.com/content/67588c6d2ecfa834463bf5ae/1778253329900-PD4YWMXV784IQU8LUW74/LEAPPs_logo_with_icons.png?content-type=image%2Fpng';
+  // Per-post social card (generated in CI, served by the static site); falls back to the site card.
+  const image = post
+    ? `https://leapps.org/blog/og/${encodeURIComponent(slug)}.png`
+    : 'https://leapps.org/blog/og/default.png';
   const destination = `https://leapps.org/blog-post?post=${encodeURIComponent(slug)}`;
   const shareUrl = `${url.origin}/blog/share/${slug}`;
 
@@ -389,6 +392,8 @@ async function handleBlogShare(url, env) {
   <meta property="og:description" content="${description}" />
   <meta property="og:url" content="${shareUrl}" />
   <meta property="og:image" content="${image}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:site_name" content="LEAPPs" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${title}" />
