@@ -12,7 +12,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: og-cards
+  # Shared with generate-blog-index so the two main-pushing jobs are serialized.
+  group: blog-main-push
   cancel-in-progress: false
 
 jobs:
@@ -45,5 +46,7 @@ jobs:
             # trigger path, so it won't re-run this workflow. But it must NOT be
             # skipped, or Cloudflare won't deploy the newly generated card.
             git commit -m "Regenerate blog OG cards"
+            # Rebase before pushing in case another main-pushing job landed first.
+            git pull --rebase origin main
             git push
           fi

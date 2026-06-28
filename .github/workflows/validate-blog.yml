@@ -1,20 +1,16 @@
 name: Validate blog manifest
 
-# Fails a PR early when blog/posts/index.json and the post files disagree —
-# unsafe/duplicate slugs, missing .md, a bad or missing date field, etc. — so
-# a malformed blog contribution can't silently break ordering or OG cards.
+# Validates a post's frontmatter and filename before merge: a URL-safe slug,
+# required fields, and a valid YYYY-MM-DD date. The index itself is generated
+# post-merge (see generate-blog-index.yml), so this checks the source posts,
+# not index.json — a contributor never edits the index by hand.
 
 on:
   pull_request:
     paths:
       - 'blog/posts/**'
-      - 'tools/validate-blog.mjs'
+      - 'scripts/generate_blog_index.py'
       - '.github/workflows/validate-blog.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'blog/posts/**'
-      - 'tools/validate-blog.mjs'
   workflow_dispatch:
 
 permissions:
@@ -25,8 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-python@v5
         with:
-          node-version: '20'
-      - name: Validate blog manifest
-        run: node tools/validate-blog.mjs
+          python-version: '3.12'
+      - name: Validate blog frontmatter
+        run: python3 scripts/generate_blog_index.py --check

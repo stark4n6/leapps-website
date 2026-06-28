@@ -35,11 +35,13 @@ Fork [abrignoni/leapps-website](https://github.com/abrignoni/leapps-website) on 
 
 ### 2. Create your Markdown file
 
-Add a file to `blog/posts/` using this naming format:
+Add a file to `blog/posts/`. The filename (without `.md`) becomes the post's slug and public URL, so use lowercase letters, digits, and hyphens:
 
 ```
-YYYY-MM-DD-your-post-title.md
+your-post-title.md
 ```
+
+Dating the filename (`2026-06-05-your-post-title.md`) is an optional convention — it keeps the folder sorted — but it isn't required.
 
 Start the file with YAML frontmatter:
 
@@ -55,20 +57,9 @@ excerpt: A one or two sentence summary shown on the blog index.
 Your content starts here...
 ```
 
-### 3. Add your post to the index
+### 3. The index generates itself
 
-Open `blog/posts/index.json` and add an entry at the top of the array:
-
-```json
-{
-  "slug": "2026-06-05-your-post-title",
-  "title": "Your Post Title",
-  "date": "2026-06-05",
-  "author": "Your Name",
-  "tags": ["forensics", "android", "artifacts"],
-  "excerpt": "A one or two sentence summary shown on the blog index."
-}
-```
+You do **not** edit `blog/posts/index.json` — it's generated automatically from each post's frontmatter after your post is merged. The `title`, `date`, `author`, `tags`, and `excerpt` fields above become the blog listing. (Maintainers can also add `pinned: true` to keep a post at the top.)
 
 ### 4. Open a pull request
 

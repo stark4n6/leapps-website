@@ -22,10 +22,11 @@ leapps-website/
 ├── search-index.json    # Static search index for all site pages
 ├── blog/
 │   ├── posts/
-│   │   ├── index.json   # Blog post manifest (slug, title, date, author, tags, excerpt)
-│   │   └── *.md         # Individual blog post content in Markdown
+│   │   ├── index.json   # Blog post manifest — GENERATED from post frontmatter (do not hand-edit)
+│   │   └── *.md         # Individual blog post content in Markdown (the source of truth)
 │   ├── images/<slug>/   # Images referenced by a post (via jsDelivr)
 │   └── og/              # Auto-generated 1200×630 social cards (one per post)
+├── scripts/             # generate_blog_index.py — builds blog/posts/index.json from frontmatter
 ├── tools/og-cards/      # OG-card generator (Satori + resvg); run by a GitHub Action
 ├── data/downloads.json  # Daily download-count snapshot (committed by an Action)
 ├── downloads/           # Downloadable files served via the leapps-api Worker
@@ -141,26 +142,14 @@ Your content starts here...
 | `tags` | ✅ | Array of strings — used for filtering; the first tag also picks the social-card accent color |
 | `excerpt` | ✅ | 1–2 sentences — shown on index card, og:description, and RSS |
 
-### 2. Update the index
+### 2. The index generates itself
 
-Open `blog/posts/index.json` and add an entry at the **top** of the array (newest first):
+**Do not edit `blog/posts/index.json` by hand.** It is generated from each post's frontmatter by `scripts/generate_blog_index.py`, which a GitHub Action runs on every push to `main` (see [`.github/workflows/generate-blog-index.yml`](.github/workflows/generate-blog-index.yml)). Your job is just to get the post's filename and frontmatter right:
 
-```json
-{
-  "slug": "your-post-title",
-  "title": "Your Post Title",
-  "date": "2026-06-05",
-  "author": "Your Name",
-  "tags": ["iLEAPP", "iOS", "artifacts"],
-  "excerpt": "A one or two sentence summary shown on the blog index and in search results."
-}
-```
-
-Field rules (enforced by CI — see step 5):
-
-- **`slug`** — must match the `.md` filename exactly (without the extension) and be URL-safe (`[\w-]+`: letters, digits, hyphen, underscore; lowercase by convention). It becomes the public URL, so it must be unique and not change after a post is shared. The `YYYY-MM-DD-` prefix is the convention but isn't required by the code; if you use one, it should match the `date` field.
-- **`date`** — required, `YYYY-MM-DD`. This field (not the filename) drives post ordering, prev/next, related posts, and the social-card cache-bust, so it must be correct.
-- **`title`, `author`, `excerpt`** — required, non-empty. **`tags`** — array of strings; the first tool tag (iLEAPP/ALEAPP/RLEAPP/VLEAPP/LAVA) sets the social-card accent color.
+- **Filename → slug** — the filename without `.md` becomes the post's slug and public URL, so it must be URL-safe (`[\w-]+`: letters, digits, hyphen, underscore; lowercase by convention) and unique. The `YYYY-MM-DD-` prefix is an optional convention, not a requirement.
+- **`date`** — `YYYY-MM-DD`. This field (not the filename) drives ordering, prev/next, related posts, and the social-card cache-bust.
+- **`title`, `author`, `excerpt`** — required, non-empty. **`tags`** — inline array; the first tool tag (iLEAPP/ALEAPP/RLEAPP/VLEAPP/LAVA) sets the social-card accent color.
+- **`pinned: true`** — optional; maintainers can add it to keep a post at the top of the blog index.
 
 ### 3. Images (optional)
 
@@ -178,10 +167,10 @@ You do **not** create the 1200×630 social-share card. A GitHub Action (`.github
 
 Submit your PR against `main`. Posts are reviewed before merging. Once merged, the post is live immediately and the social card is generated on the same push.
 
-A GitHub Action (`.github/workflows/validate-blog.yml`) runs `tools/validate-blog.mjs` on every PR that touches `blog/posts/`, checking the manifest against the post files (URL-safe/unique slugs, a matching `.md` for each entry, a valid `date`, and the required fields). If it fails, the PR check turns red with the exact problem. Run it locally before pushing:
+A GitHub Action (`.github/workflows/validate-blog.yml`) validates your post's frontmatter on every PR that touches `blog/posts/` — a URL-safe slug, a valid `YYYY-MM-DD` date, and the required fields. If it fails, the PR check turns red with the exact problem. Run the same check locally before pushing:
 
 ```bash
-node tools/validate-blog.mjs
+python3 scripts/generate_blog_index.py --check
 ```
 
 ### Markdown support
