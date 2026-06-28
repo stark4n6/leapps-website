@@ -89,6 +89,20 @@ Blog content is **not** served by the Worker — `index.json` and each `<slug>.m
 
 ---
 
+## Search
+
+The site search box (in the nav) merges three sources at query time, each rendered as its own group:
+
+| Group | Source | Maintenance |
+|---|---|---|
+| **Blog Posts** | `blog/posts/index.json`, fetched live | Automatic — every post is searchable as soon as its manifest entry merges. No separate step. |
+| **Artifacts** | the tool repos' `scripts/artifacts/` via the `leapps-api` Worker, live | Automatic — pulled from GitHub. |
+| **Pages** | `search-index.json`, a static curated file | Hand-maintained — see below. |
+
+So blog posts and artifacts are **already dynamic**; nothing needs regenerating for them. `search-index.json` holds only the curated **page/section** entries — bespoke titles and excerpts (not scraped from the DOM), one per searchable page or anchor (e.g. `releases#section-ileapp`, `docs#step-3`). Edit that file by hand only when you want to add or reword a page/section result; it is not auto-generated and does **not** list individual blog posts (those come from the live manifest above — adding them here would double them).
+
+---
+
 ## Adding a blog post
 
 Blog posts are plain Markdown files. Adding a post is two file changes and a pull request.
