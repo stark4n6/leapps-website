@@ -63,7 +63,8 @@ That split is common in iOS app research: one file gives you the obvious setting
 
 The first version adds these Home Depot artifacts:
 
-- **Home Depot - Account & Store**
+- **Home Depot - Account**
+- **Home Depot - Local Store**
 - **Home Depot - Saved Searches**
 - **Home Depot - Search History**
 - **Home Depot - Products Viewed**
@@ -77,11 +78,11 @@ That is a pretty wide first pass. Some of it is user-facing activity, some of it
 
 ## Account and store details
 
-The account artifact parses account data from up to three places: `USER_INFO_KEY` in the app preferences plist, `SharedUserInfoKey` in the App Group preferences plist, and `userInfo.txt` in the App Group container. That can include account identity information, email address, name, phone number, customer type, ZIP code, customer account ID, and local store details.
+The account and store artifacts parse data from up to three places: `USER_INFO_KEY` in the app preferences plist, `SharedUserInfoKey` in the App Group preferences plist, and `userInfo.txt` in the App Group container. That can include account identity information, email address, name, phone number, customer type, ZIP code, customer account ID, and local store details.
 
-The store side can include store name, address, phone number, and coordinates. Preferred store IDs can also come from `savedStorePreference` in the app preferences.
+The store side can include store name, address, phone number, and coordinates. Preferred store IDs can also come from `savedStorePreference` in the app preferences. The app even stores latitude and longitude for the selected store.
 
-This artifact can contain PII, so it should be handled with the same care as any other account or profile artifact. It is useful, but it is not subtle. Bright orange bucket, right in the middle of the aisle.
+The account artifact can contain PII, so it should be handled with the same care as any other account or profile artifact. It is useful, but it is not subtle. Bright orange bucket, right in the middle of the aisle.
 
 ![LAVA table showing Home Depot account and store artifact output](https://cdn.jsdelivr.net/gh/abrignoni/leapps-website@main/blog/images/home-depot-ios-artifacts/lava-home-depot-account.png)
 *Figure 2: Account and store details shown in LAVA*
@@ -151,3 +152,11 @@ This is an initial Home Depot parser, but it already covers several useful areas
 - What product images and search URLs were cached
 
 As usual, the next round of samples will probably teach us where the weird edges are. That is part of the fun. Every app has its own habits, and a parser gets better when more people throw real-world data at it.
+
+## Add it to your cart
+
+The LEAPPs tools move fast, and that is one of the fun parts of working in an open source forensic community. New artifacts can land between packaged releases, so the current release build may not always include the newest parser work.
+
+If you are comfortable running iLEAPP from source, you can try the module before the next packaged release. If you prefer the release builds, that is completely fine too. They exist so people do not have to wrestle with Python dependencies just to run a case.
+
+As of this writing, the latest packaged release is 2.5.0, and this Home Depot module is set to be included in the upcoming 2.6.0 release. The latest releases of all the LEAPP family tools are [shown on the website](https://leapps.org/releases). In the meantime, you can review the [module code](https://github.com/abrignoni/iLEAPP/blob/main/scripts/artifacts/home_depot.py) in the iLEAPP repo.
