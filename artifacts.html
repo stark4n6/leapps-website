@@ -106,6 +106,8 @@
 .lp-updated-none { color: #555; }
 .lp-catalog-updated { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: .7rem; }
 .lp-paths-toggle { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .08em; color: var(--muted); cursor: pointer; background: none; border: none; padding: 0; display: inline-flex; align-items: center; gap: .3rem; transition: color .2s; margin-top: .35rem; }
+.lp-paths-toggle + .lp-paths-list + .lp-paths-toggle,
+    .lp-paths-toggle + .lp-sample-list + .lp-paths-toggle { margin-left: 1rem; } /* breathing room between the paths and samples toggles */
 .lp-paths-toggle:hover { color: var(--gold); }
 .lp-paths-list { display: none; margin-top: .4rem; }
 .lp-paths-list.open { display: block; }
