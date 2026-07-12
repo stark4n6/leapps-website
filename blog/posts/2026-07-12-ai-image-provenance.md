@@ -57,9 +57,17 @@ Scroll to the bottom and the IPTC only image sits right next to the C2PA ones, c
 
 ![LAVA viewer scrolled to the XMP/IPTC row with the Bing Image Creator credit](https://cdn.jsdelivr.net/gh/abrignoni/leapps-website@main/blog/images/2026-07-12-ai-image-provenance/lava-iptc.webp)
 
+## Who signed it, and when
+
+A quick follow up, because this part is fun. The artifact now reads the signature too, not just a note that one is present. For a C2PA manifest it pulls the stated signer, the issuing certificate, the certificate validity window, the signature algorithm, and the signing time from the trusted timestamp.
+
+On the real Google images that means the report shows the signer as Google LLC (Google Media Processing Services), the algorithm as ES256, and a signing time that lines up with the minute the picture was made. That signing time is a proper timestamp column, so it drops right into your timeline like any other date. All of it is still pure Python, no new dependencies.
+
+One caveat, and it matters. The signer, issuer, and time are read as stated in the file. The artifact does not cryptographically verify the signature, validate the certificate chain, or check revocation. So treat "Signed By" as a strong lead to corroborate, not proof of origin. The column literally says "stated" for that reason.
+
 ## Two honest notes
 
-The artifact reads and reports the manifest. It does not yet cryptographically validate the C2PA signature, so a value of `Signature: Present` means a signature box is there, not that it is trusted or unbroken. Validation is on the list.
+The signature details above are read as stated, not cryptographically verified. Full signature and certificate chain validation would be the natural next step.
 
 It reads the modern IPTC that lives in XMP. That is on purpose. The Digital Source Type only exists in XMP, so that is where the AI answer is.
 
